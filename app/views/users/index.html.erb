@@ -7,6 +7,38 @@
     <%= render 'books/form1', book: @book %></div>
       <div class="col-md-8 offset-md-1">
       <h2>Users</h2>
-      <%= render 'index',users: @users %> </div>
+      <table class='table'>
+  <thead>
+    <tr>
+      <th>image</th>
+      <th>name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= attachment_image_tag(@user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg") %></td>
+        <td><%= user.name %></td>
+        <td> unless current_user == user
+            <!--フォロー解除ボタン-->
+        <td><% if current_user.following?(user) %>
+              <% form_with model: @relationship, url: user_relationship_path(user), method: :delete, local: true do |f| %>
+              <%= f.hidden_field :follow_id, value: user.id  %>
+              <%= f.submit "フォローを解除する" %></td>
+              <% end %>
+              <!--フォローボタン-->
+            <% else %>
+        <td><%= form_with model: @set_relationship, url: user_relationships_path, local: true do |f| %>
+              <%= f.hidden_field :follow_id, value: user.id %>
+              <%= f.submit "フォロー"%></td>
+              <% end %>
+            <% end %>
+        <td><%= link_to 'Show', user_path(user), class: "user_#{user.id}" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+ </div>
   </div>
 </div>
