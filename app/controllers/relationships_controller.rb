@@ -1,24 +1,22 @@
 class RelationshipsController < ApplicationController
-    before_action :set_user
 
     def create
-    user = User.find(params[:followed_id])
+    # relationship = Relationship.new(followed_id: params[:user_id], follower_id: current_user.id)
+    # relationship.save
+    user = User.find(params[:user_id])
     current_user.follow(user)
     redirect_to user
     end
 
 
     def destroy
-      user = Relationship.find(params[:id]).followed
-      current_user.unfollow(user)
+      # ↓解除したい相手のユーザー
+
+      user = User.find(params[:user_id])
+      user.unfollow(params[:user_id])
       redirect_to user
     end
 
 
-    private
-
-    def set_user
-      @user = User.find(params[:follow_id])
-    end
 
 end

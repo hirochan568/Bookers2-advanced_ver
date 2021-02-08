@@ -8,27 +8,28 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :book_comments, dependent: :destroy
   has_many :favorited_books, through: :fovorites, source: :book
-  
+
   has_many :active_relationships, class_name:  "Relationship", foreign_key: "follower_id",dependent: :destroy
-  has_many :passive_relationships, class_name:  "Relationship",foreign_key: "followed_id",dependent:   :destroy
-  has_many :following, through: :active_relationships, source: :followed
+  has_many :passive_relationships, class_name:  "Relationship",foreign_key: "followed_id",dependent: :destroy
+  has_many :followings, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
-  # フォローユーザーは同一ではないか、なければ登録。other userはフォローされる人、  selfはメソドで今回はcurrent userとなる。
+  # フォローユーザーは同一ではないか、なければ登録。other userはフォローされる人、  selfはメソドで今回はcurrent userとなる
   def follow(other_user)
     unless self == other_user
       self.active_relationships.create(followed_id: other_user.id)
     end
   end
   # 二重のフォローの場合は登録を解除（もしrelationship内に除法がある場合）
-  def unfollow(other_user)
-     self.passive_relationships.find_by(followed_id: other_user.id).destroy
+  def unfollow(user_id)
+    # binding.pry ↓find byはフォローされているユーザの誰が解除するかを
+     self.passive_relationships.find_by(followed_id: user_id).destroy
   end
   # フォローユーザー情報の取得と指定のユーザーが既にいないか確認
   def following?(other_user)
-    following.include?(other_user)
+    self.followings.include?(other_user)
   end
 
-  
+
   def favorited_by?(user)
     favorites.where(user_id: user.id).exists?
   end

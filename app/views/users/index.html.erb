@@ -18,18 +18,32 @@
   <tbody>
     <% @users.each do |user| %>
       <tr>
-        <td><%= attachment_image_tag(@user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg") %></td>
+        <td><%= attachment_image_tag(user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg") %></td>
         <td><%= user.name %></td>
-        <td> unless current_user == user
+        <% @user ||= current_user %>
+          <div class="stats">
+            <td><a href="<%= user_following_path(user) %>">
+              <strong id="following" class="stat">
+                <%= user.followings.count %>
+              </strong>
+              following
+            </a></td>
+            <td><a href="<%= user_followers_path(user) %>">
+              <strong id="followers" class="stat">
+                <%= user.followers.count %>
+              </strong>
+              followers
+            </a>
+          </div></td>
             <!--フォロー解除ボタン-->
         <td><% if current_user.following?(user) %>
-              <% form_with model: @relationship, url: user_relationship_path(user), method: :delete, local: true do |f| %>
+              <%= form_with model: @relationship, url: user_relationships_path(user), method: :delete, local: true do |f| %>
               <%= f.hidden_field :follow_id, value: user.id  %>
-              <%= f.submit "フォローを解除する" %></td>
+              <%= f.submit "フォロー解除" %>
               <% end %>
               <!--フォローボタン-->
             <% else %>
-        <td><%= form_with model: @set_relationship, url: user_relationships_path, local: true do |f| %>
+            <%= form_with model: @set_relationship, url: user_relationships_path(user), local: true do |f| %>
               <%= f.hidden_field :follow_id, value: user.id %>
               <%= f.submit "フォロー"%></td>
               <% end %>
