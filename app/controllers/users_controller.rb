@@ -2,6 +2,11 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_correct_user, only: [:update, :edit, :destroy]
 
+  # def search
+  #   method = params[:search_method]
+  #   word = params[:search_word]
+  #   @posts = Post.search(method,word)
+  # end
 
   def show
     @user = User.find(params[:id])
@@ -26,6 +31,8 @@ class UsersController < ApplicationController
     @users = @user.followers
     render 'show_follower'
   end
+  
+  
 
   def edit
     @user = User.find(params[:id])

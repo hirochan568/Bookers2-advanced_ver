@@ -30,6 +30,19 @@ class User < ApplicationRecord
     self.followings.include?(other_user)
   end
 
+  def self.looks(searches, words)
+    if searches == "forward_match"
+      @users = User.where("name LIKE?","#{words}%")
+    elsif searches == "backward_match"
+      @users = User.where("name LIKE?","%#{words}")
+    elsif searches == "perfect_match"
+      @users = User.where("#{words}")
+    elsif searches == "partial_match"
+      @users = User.where("name LIKE?","%#{words}%")
+    else
+      @users = User.all
+    end
+  end
 
   def favorited_by?(user)
     favorites.where(user_id: user.id).exists?
