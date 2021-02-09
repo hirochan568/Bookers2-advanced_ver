@@ -1,17 +1,35 @@
-<div class='container px-5 px-sm-0'>
-  <div class='row'>
-    <div class='col-md-3'>
+<table class='table'>
+<thead>
+    <tr>
+      <th>image</th>
+      <th>name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @user.followers.each do |user| %>
+      <tr>
+        <td><%= attachment_image_tag(user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg") %></td>
+        <td><%= user.name %></td>
+        <% @user ||= current_user %>
+          <div class="stats">
+            <td><a href="<%= user_following_path(user) %>">
+              <strong id="following" class="stat">
+                <%= user.followings.count %>
+              </strong>
+              following
+            </a></td>
+            <td><a href="<%= user_followers_path(user) %>">
+              <strong id="followers" class="stat">
+                <%= user.followers.count %>
+              </strong>
+              followers
+            </a>
+          </div>
+        <td><%= link_to 'Show', user_path(user), class: "user_#{user.id}" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
-         <% @user.followers.each do |user| %>
-        <table>
-        <tr>
-          <td>  <%= user.name %> </td>
-          <td><%= link_to '詳細', user_path(user) %></td>
-        </tr>
 
-        </table>
-        <% end %>
-
-     </div>
-  </div>
-</div>

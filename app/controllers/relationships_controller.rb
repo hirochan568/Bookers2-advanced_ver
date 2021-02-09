@@ -5,16 +5,16 @@ class RelationshipsController < ApplicationController
     # relationship.save
     user = User.find(params[:user_id])
     current_user.follow(user)
-    redirect_to user
+    redirect_back(fallback_location: root_path)
     end
 
 
     def destroy
       # ↓解除したい相手のユーザー
 
-      user = User.find(params[:user_id])
-      user.unfollow(params[:user_id])
-      redirect_to user
+
+      current_user.unfollow(params[:user_id])
+      redirect_back(fallback_location: root_path)
     end
 
 

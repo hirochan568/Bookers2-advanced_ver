@@ -21,8 +21,9 @@ class User < ApplicationRecord
   end
   # 二重のフォローの場合は登録を解除（もしrelationship内に除法がある場合）
   def unfollow(user_id)
-    # binding.pry ↓find byはフォローされているユーザの誰が解除するかを
-     self.passive_relationships.find_by(followed_id: user_id).destroy
+    # binding.pry
+    # ↓find byはフォローされているユーザの誰が解除するかを
+     self.active_relationships.find_by(followed_id: user_id).destroy
   end
   # フォローユーザー情報の取得と指定のユーザーが既にいないか確認
   def following?(other_user)
