@@ -1,0 +1,2 @@
+$('#comments_area').html("<%= j(render partial: 'book_comments/show', locals: {book: @book, book_comment: @book_comment}) %>");
+<!----  ↑　更新したいエリアの指定　　　　↑　アクションしたい対象の部分テンプレート　　↑アクションする際に必要なローカル変数（book_command内のコントローラーに記載）>
